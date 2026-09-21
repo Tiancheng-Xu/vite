@@ -51,6 +51,18 @@ describe('watcher configuration', () => {
           resolve(root, '../custom-public'),
         ]),
       )
+      expect(watchedDirs).not.toContain(resolve(root, 'test-results'))
+    })
+  })
+
+  it('should watch a project under a directory matching a default ignore', async () => {
+    const root = fileURLToPath(
+      new URL('./fixtures/watcher/test-results/project', import.meta.url),
+    )
+    server = await createServer({ root })
+    await new Promise((resolve) => server!.watcher.once('ready', resolve))
+    await vi.waitFor(() => {
+      expect(Object.keys(server!.watcher.getWatched())).toContain(root)
     })
   })
 })

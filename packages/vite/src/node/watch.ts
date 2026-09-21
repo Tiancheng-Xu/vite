@@ -63,6 +63,7 @@ export function resolveChokidarOptions(
   resolvedOutDirs: Set<string>,
   emptyOutDir: boolean,
   cacheDir: string,
+  root: string,
 ): WatchOptions {
   const {
     ignored: ignoredList,
@@ -75,10 +76,11 @@ export function resolveChokidarOptions(
     exclude,
     ...otherOptions
   } = options ?? {}
+  const escapedRoot = withTrailingSlash(escapePath(root))
   const ignored: WatchOptions['ignored'] = [
-    '**/.git/**',
-    '**/node_modules/**',
-    '**/test-results/**', // Playwright
+    `${escapedRoot}**/.git/**`,
+    `${escapedRoot}**/node_modules/**`,
+    `${escapedRoot}**/test-results/**`, // Playwright
     escapePath(cacheDir) + '/**',
     ...arraify(ignoredList || []),
   ]
